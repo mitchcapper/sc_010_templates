@@ -3,7 +3,7 @@ This makes it easy to take c# structures and export them into templates for the 
 
 In general if you need a 010 Template you are welcome to email me the c# structures and I can generate it if you do not want to figure out this tool:)
 
-See the [Generated](https://github.com/mitchcapper/sc_010_templates/Generated) folder for some examples of generated types.
+See the [Generated](https://github.com/mitchcapper/sc_010_templates/tree/master/Generated) folder for some examples of generated types.
 
 ## Disclaimer
 
@@ -18,8 +18,8 @@ CStructGen.CONF_OPT has the default options.  Most can be inferred from their co
 - StructModeExternal -- Flat structure tree, there are no embedded structures they are all top level.  This is a bit interesting when you have multiple embedded structures of the same type, but it works:)
 - StructModeInline -- The structure is declared exactly where it occurs in memory
 
-Technically you can include multiple of them.  This makes the template longer, but allows you at runtime (in 010 editor that is) to switch between them just by toggling the global STRUCT_MODE setting for the template.  It makes templates much uglier though, so by default the templates I submit I normally leave in AtEnd mode.  If you only have one all the struct mode checks in the final template are removed (so cleaner).  See `RunningProcessAllStruct.bt` for an example of all modes in one file. 
+Technically you can include multiple of them.  This makes the template longer, but allows you at runtime (in 010 editor that is) to switch between them just by toggling the global STRUCT_MODE setting for the template.  It makes templates much uglier though, so by default the templates I submit I normally leave in AtEnd mode.  If you only have one all the struct mode checks in the final template are removed (so cleaner).  See [RunningProcessAllStruct.bt](https://github.com/mitchcapper/sc_010_templates/blob/master/Generated/RunningProcessAllStruct.bt) for an example of all modes in one file. 
 
-By default it is designed for in-memory structures and handles padding as much.  If the structures are defined with padding but are being used in a situation where the padding does not apply one could easily short circuit the `void Pad(int bytes)` function in hex010helpers.c to ignore all pads.
+By default it is designed for in-memory structures and handles padding as much.  If the structures are defined with padding but are being used in a situation where the padding does not apply one could easily short circuit the `void Pad(int bytes)` function in [hex010helpers.c](https://github.com/mitchcapper/sc_010_templates/blob/master/hex010Helpers.c) to ignore all pads.
 
 It doesn't really have a way of knowing what types are native C types/010 types unless you tell it.  To Alias one or more c# types to their C types a call like `AddCType("UINT64", typeof(long), typeof(ulong), typeof(long));` is done.  The basic valuetypes in c# are already added but if you have other classes/structs/etc that exist in 010 already you can use that method to add them.
