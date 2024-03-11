@@ -1,0 +1,31 @@
+//------------------------------------------------
+//--- 010 Editor v13.0.1 Binary Template
+//
+//      File: SYSTEM_HANDLE_INFORMATION_EX
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+struct SYSTEM_HANDLE_INFORMATION_EX
+{
+	UINT64 NumberOfHandles;
+	UINT64 Reserved;
+    struct SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX
+    {
+	    UINT64 Object;// <comment="This should be greater than 15.">;
+	    UINT64 UniqueProcessId;
+	    UINT64 HandleValue;
+	    UINT32 GrantedAccess;
+	    USHORT CreatorBackTraceIndex;
+	    USHORT ObjectTypeIndex;
+	    UINT32 HandleAttributes;
+	    UINT32 Reserved;
+    };
+	SYSTEM_HANDLE_TABLE_ENTRY_INFO_EX HandleList[NumberOfHandles]  <comment=Str("Proc: %u Handle: %u Type: %u",UniqueProcessId,HandleValue, ObjectTypeIndex)>;
+} handle_info;
+
+//<read=Str("<%g %g %g>",this[0],this[1],this[2])>;

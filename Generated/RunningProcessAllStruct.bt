@@ -1,0 +1,906 @@
+
+#include "hex010Helpers.h"
+const BOOL VERBOSE_PRINT_DUMP = TRUE;
+const BOOL VERBOSE_READ_STRING = FALSE;
+const STRUCT_DECLARE_MODE STRUCT_MODE = STRUCT_External;
+const BOOL FIND_PEB_DEBUG = FALSE;
+proc_bitness = BITNESS_Unknown;
+#include "hex010Helpers.c"
+
+typedef struct {
+	UINT32 _Children[2] <comment="Offset: 0(0x00)">;
+	P_X86 ParentValue <comment="Offset: 8(0x08)">;
+} RTL_BALANCED_NODE32  <comment="Size: 12(0x0c)">;
+
+
+enum LDR_DLL_LOAD_REASON { LoadReasonStaticDependency=0, LoadReasonStaticForwarderDependency=1, LoadReasonDynamicForwarderDependency=2, LoadReasonDelayloadDependency=3, LoadReasonDynamicLoad=4, LoadReasonAsImageLoad=5, LoadReasonAsDataLoad=6, LoadReasonEnclavePrimary=7, LoadReasonEnclaveDependency=8, LoadReasonUnknown=-1 };
+
+typedef struct {
+	UINT64 _Children[2] <comment="Offset: 0(0x00)">;
+	P_X64 ParentValue <comment="Offset: 16(0x10)">;
+} RTL_BALANCED_NODE64  <comment="Size: 24(0x18)">;
+
+
+enum LdrEntryFlags { PackagedBinary=1, MarkedForRemoval=2, ImageDll=4, LoadNotificationsSent=8, TelemetryEntryProcessed=16, ProcessStaticImport=32, InLegacyLists=64, InIndexes=128, InExceptionTable=256, LoadInProgress=4096, LoadConfigProcessed=8192, EntryProcessed=16384, ProtectDelayLoad=32768, DontCallForThreads=262144, ProcessAttachCalled=524288, ProcessAttachFailed=1048576, CorDeferredValidate=2097152, CorImage=4194304, DontRelocate=8388608, CorILOnly=16777216, ChpeImage=33554432, Redirected=268435456, CompatDatabaseProcessed=2147483648 };
+
+typedef struct {
+	P_X86 _Flink <comment="Offset: 0(0x00)">;
+	P_X86 _Blink <comment="Offset: 4(0x04)">;
+} LIST_ENTRY32  <comment="Size: 8(0x08)">;
+
+
+typedef struct {
+	uint16 Length <comment="Offset: 0(0x00)">;
+	uint16 MaximumLength <comment="Offset: 2(0x02)">;
+	P_X86 Buffer <comment="Offset: 4(0x04)">;
+} UNICODE_STRING32  <comment="Size: 8(0x08)", read=OurReadString("UNICODE_STRING32.Buffer",this.Buffer,this.Length )>;
+
+
+typedef P_X86 HANDLE32  <comment="Size: 4(0x04)">;
+
+
+enum PEB_LeapSecond { SixtySecondEnabled=1 };
+
+enum PEB_Tracing { HeapTracingEnabled=1, CritSecTracingEnabled=2, LibLoaderTracingEnabled=4 };
+
+typedef struct {
+	P_X64 _Flink <comment="Offset: 0(0x00)">;
+	P_X64 _Blink <comment="Offset: 8(0x08)">;
+} LIST_ENTRY64  <comment="Size: 16(0x10)">;
+
+
+typedef struct {
+	uint16 Length <comment="Offset: 0(0x00)">;
+	uint16 MaximumLength <comment="Offset: 2(0x02)">;
+	Pad(4);
+
+	P_X64 Buffer <comment="Offset: 8(0x08)">;
+} UNICODE_STRING64  <comment="Size: 16(0x10)", read=OurReadString("UNICODE_STRING64.Buffer",this.Buffer,this.Length )>;
+
+
+enum <UINT64> PEB_AppCompat { KACF_OLDGETSHORTPATHNAME=1, KACF_VERSIONLIE_NOT_USED=2, KACF_GETDISKFREESPACE=8, KACF_FTMFROMCURRENTAPT=32, KACF_DISALLOWORBINDINGCHANGES=64, KACF_OLE32VALIDATEPTRS=128, KACF_DISABLECICERO=256, KACF_OLE32ENABLEASYNCDOCFILE=512, KACF_OLE32ENABLELEGACYEXCEPTIONHANDLING=1024, KACF_RPCDISABLENDRCLIENTHARDENING=2048, KACF_RPCDISABLENDRMAYBENULL_SIZEIS=4096, KACF_DISABLEALLDDEHACK_NOT_USED=8192, KACF_RPCDISABLENDR61_RANGE=16384, KACF_RPC32ENABLELEGACYEXCEPTIONHANDLING=32768, KACF_OLE32DOCFILEUSELEGACYNTFSFLAGS=65536, KACF_RPCDISABLENDRCONSTIIDCHECK=131072, KACF_USERDISABLEFORWARDERPATCH=262144, KACF_OLE32DISABLENEW_WMPAINT_DISPATCH=1048576, KACF_ADDRESTRICTEDSIDINCOINITIALIZESECURITY=2097152, KACF_ALLOCDEBUGINFOFORCRITSECTIONS=4194304, KACF_OLEAUT32ENABLEUNSAFELOADTYPELIBRELATIVE=8388608, KACF_ALLOWMAXIMIZEDWINDOWGAMMA=16777216, KACF_DONOTADDTOCACHE=2147483648 };
+
+typedef UINT64 LARGE_INTEGER  <comment="Size: 8(0x08)">;
+
+
+enum PEB_CrossProcess { ProcessInJob=1, ProcessInitializing=2, ProcessUsingVEH=4, ProcessUsingVCH=8, ProcessUsingFTH=16, ProcessPreviouslyThrottled=32, ProcessCurrentlyThrottled=64, ProcessImagesHotPatched=128 };
+
+typedef P_X64 HANDLE64  <comment="Size: 8(0x08)">;
+
+
+enum <byte> PEB_BitField { ImageUsedLargePages=1, IsProtectedProcess=2, IsImageDynamicallyRelocated=4, SkipPatchingUser32Forwarders=8, IsPackagedProcess=16, IsAppContainer=32, IsProtectedProcessLight=64, IsLongPathAwareProcess=128 };
+
+typedef byte BOOLEAN  <comment="Size: 1(0x01)">;
+
+
+typedef UINT32 KAFFINITY32  <comment="Size: 4(0x04)">;
+
+
+typedef UINT32 KPRIORITY  <comment="Size: 4(0x04)">;
+
+
+typedef UINT64 KAFFINITY64  <comment="Size: 8(0x08)">;
+
+
+typedef UINT32 NTSTATUS  <comment="Size: 4(0x04)">;
+
+
+typedef struct {
+	uint16 Type <comment="Offset: 0(0x00)">;
+	uint16 CreatorBackTraceIndex <comment="Offset: 2(0x02)">;
+	P_X86 CriticalSection <comment="Offset: 4(0x04)">;
+	LIST_ENTRY32 ProcessLocksList <comment="Offset: 8(0x08)">;
+	UINT32 EntryCount <comment="Offset: 16(0x10)">;
+	UINT32 ContentionCount <comment="Offset: 20(0x14)">;
+	UINT32 Flags <comment="Offset: 24(0x18)">;
+	uint16 CreatorBackTraceIndexHigh <comment="Offset: 28(0x1c)">;
+	uint16 Identifier <comment="Offset: 30(0x1e)">;
+} RTL_CRITICAL_SECTION_DEBUG32  <comment="Size: 32(0x20)">;
+
+
+typedef struct {
+	UNICODE_STRING32 DosPath <comment="Offset: 0(0x00)">;
+	HANDLE32 Handle <comment="Offset: 8(0x08)">;
+} CURDIR32  <comment="Size: 12(0x0c)">;
+
+
+typedef struct {
+	LIST_ENTRY32 InLoadOrderLinks <comment="Offset: 0(0x00)">;
+	LIST_ENTRY32 InMemoryOrderLinks <comment="Offset: 8(0x08)">;
+	LIST_ENTRY32 InProgressLinks <comment="Offset: 16(0x10)">;
+	P_X86 DllBase <comment="Offset: 24(0x18)">;
+	P_X86 Entrypoint <comment="Offset: 28(0x1c)">;
+	UINT32 SizeOfImage <comment="Offset: 32(0x20)">;
+	UNICODE_STRING32 FullDllName <comment="Offset: 36(0x24)">;
+	UNICODE_STRING32 BaseDllName <comment="Offset: 44(0x2c)">;
+	LdrEntryFlags Flags <comment="Offset: 52(0x34)">;
+	uint16 ObsoleteLoadCount <comment="Offset: 56(0x38)">;
+	uint16 TlsIndex <comment="Offset: 58(0x3a)">;
+	LIST_ENTRY32 HashLinks <comment="Offset: 60(0x3c)">;
+	UINT32 TimeDateStamp <comment="Offset: 68(0x44)">;
+	P_X86 EntryPointActivationContext <comment="Offset: 72(0x48)">;
+	P_X86 Lock <comment="Offset: 76(0x4c)">;
+	P_X86 DdagNode <comment="Offset: 80(0x50)">;
+	LIST_ENTRY32 NodeModuleLink <comment="Offset: 84(0x54)">;
+	P_X86 LoadContext <comment="Offset: 92(0x5c)">;
+	P_X86 ParentBaseDll <comment="Offset: 96(0x60)">;
+	P_X86 SwitchBackContext <comment="Offset: 100(0x64)">;
+	RTL_BALANCED_NODE32 BaseAddressIndexNode <comment="Offset: 104(0x68)">;
+	RTL_BALANCED_NODE32 MappingInfoIndexNode <comment="Offset: 112(0x70)">;
+	Pad(4);
+
+	P_X86 OriginalBase_NT62 <comment="Offset: 128(0x80)">;
+	Pad(4);
+
+	LARGE_INTEGER LoadTime_NT62 <comment="Offset: 136(0x88)">;
+	UINT32 BaseNameHashValue <comment="Offset: 144(0x90)">;
+	LDR_DLL_LOAD_REASON LoadReason <comment="Offset: 148(0x94)">;
+	UINT32 ImplicitPathOptions <comment="Offset: 152(0x98)">;
+	UINT32 ReferenceCount <comment="Offset: 156(0x9c)">;
+	UINT32 DependentLoadFlags <comment="Offset: 160(0xa0)">;
+	byte SigningLevel <comment="Offset: 164(0xa4)">;
+} LDR_DATA_TABLE_ENTRY32  <comment="Size: 168(0xa8)">;
+
+
+typedef struct {
+	uint16 Type <comment="Offset: 0(0x00)">;
+	uint16 CreatorBackTraceIndex <comment="Offset: 2(0x02)">;
+	Pad(4);
+
+	P_X64 CriticalSection <comment="Offset: 8(0x08)">;
+	LIST_ENTRY64 ProcessLocksList <comment="Offset: 16(0x10)">;
+	UINT32 EntryCount <comment="Offset: 32(0x20)">;
+	UINT32 ContentionCount <comment="Offset: 36(0x24)">;
+	UINT32 Flags <comment="Offset: 40(0x28)">;
+	uint16 CreatorBackTraceIndexHigh <comment="Offset: 44(0x2c)">;
+	uint16 Identifier <comment="Offset: 46(0x2e)">;
+} RTL_CRITICAL_SECTION_DEBUG64  <comment="Size: 48(0x30)">;
+
+
+typedef struct {
+	UNICODE_STRING64 DosPath <comment="Offset: 0(0x00)">;
+	HANDLE64 Handle <comment="Offset: 16(0x10)">;
+} CURDIR64  <comment="Size: 24(0x18)">;
+
+
+typedef struct {
+	LIST_ENTRY64 InLoadOrderLinks <comment="Offset: 0(0x00)">;
+	LIST_ENTRY64 InMemoryOrderLinks <comment="Offset: 16(0x10)">;
+	LIST_ENTRY64 InProgressLinks <comment="Offset: 32(0x20)">;
+	P_X64 DllBase <comment="Offset: 48(0x30)">;
+	P_X64 Entrypoint <comment="Offset: 56(0x38)">;
+	UINT32 SizeOfImage <comment="Offset: 64(0x40)">;
+	Pad(4);
+
+	UNICODE_STRING64 FullDllName <comment="Offset: 72(0x48)">;
+	UNICODE_STRING64 BaseDllName <comment="Offset: 88(0x58)">;
+	LdrEntryFlags Flags <comment="Offset: 104(0x68)">;
+	uint16 ObsoleteLoadCount <comment="Offset: 108(0x6c)">;
+	uint16 TlsIndex <comment="Offset: 110(0x6e)">;
+	LIST_ENTRY64 HashLinks <comment="Offset: 112(0x70)">;
+	UINT32 TimeDateStamp <comment="Offset: 128(0x80)">;
+	Pad(4);
+
+	P_X64 EntryPointActivationContext <comment="Offset: 136(0x88)">;
+	P_X64 Lock <comment="Offset: 144(0x90)">;
+	P_X64 DdagNode <comment="Offset: 152(0x98)">;
+	LIST_ENTRY64 NodeModuleLink <comment="Offset: 160(0xa0)">;
+	P_X64 LoadContext <comment="Offset: 176(0xb0)">;
+	P_X64 ParentBaseDll <comment="Offset: 184(0xb8)">;
+	P_X64 SwitchBackContext <comment="Offset: 192(0xc0)">;
+	RTL_BALANCED_NODE64 BaseAddressIndexNode <comment="Offset: 200(0xc8)">;
+	RTL_BALANCED_NODE64 MappingInfoIndexNode <comment="Offset: 224(0xe0)">;
+	P_X64 OriginalBase_NT62 <comment="Offset: 248(0xf8)">;
+	LARGE_INTEGER LoadTime_NT62 <comment="Offset: 256(0x100)">;
+	UINT32 BaseNameHashValue <comment="Offset: 264(0x108)">;
+	LDR_DLL_LOAD_REASON LoadReason <comment="Offset: 268(0x10c)">;
+	UINT32 ImplicitPathOptions <comment="Offset: 272(0x110)">;
+	UINT32 ReferenceCount <comment="Offset: 276(0x114)">;
+	UINT32 DependentLoadFlags <comment="Offset: 280(0x118)">;
+	byte SigningLevel <comment="Offset: 284(0x11c)">;
+} LDR_DATA_TABLE_ENTRY64  <comment="Size: 288(0x120)">;
+
+
+typedef struct {
+	P_X86 DebugInfo <comment="Offset: 0(0x00)">;
+	UINT32 LockCount <comment="Offset: 4(0x04)">;	if (STRUCT_MODE == STRUCT_Inline){
+		local P_C _cp12 = FTell();
+		if (CondPointerJump("RTL_CRITICAL_SECTION32.DebugInfo(RTL_CRITICAL_SECTION_DEBUG32)", DebugInfo, LockCount != -1))
+			 RTL_CRITICAL_SECTION_DEBUG32 _DebugInfo;
+		FSeek(_cp12);
+	}
+
+	UINT32 RecursionCount <comment="Offset: 8(0x08)">;
+	HANDLE32 OwningThread <comment="Offset: 12(0x0c)">;
+	HANDLE32 LockSemaphore <comment="Offset: 16(0x10)">;
+	UINT32 SpinCount <comment="Offset: 20(0x14)">;
+	if (STRUCT_MODE == STRUCT_AtEnd){
+		local P_C _cur_pos = FTell();
+		if (CondPointerJump("RTL_CRITICAL_SECTION32.DebugInfo(RTL_CRITICAL_SECTION_DEBUG32)", DebugInfo, LockCount != -1))
+			 RTL_CRITICAL_SECTION_DEBUG32 _DebugInfo;
+		
+		FSeek(_cur_pos);
+	}
+	if (STRUCT_MODE == STRUCT_External){
+		if (LockCount != -1){
+				
+		externals[CUR_EXTERNAL_POS].desc = "RTL_CRITICAL_SECTION32.DebugInfo(RTL_CRITICAL_SECTION_DEBUG32)";
+		externals[CUR_EXTERNAL_POS].type = "RTL_CRITICAL_SECTION_DEBUG32";
+		externals[CUR_EXTERNAL_POS].comment = "DebugInfo";
+		externals[CUR_EXTERNAL_POS].start = DebugInfo;
+		CUR_EXTERNAL_POS++;
+		}
+	}
+} RTL_CRITICAL_SECTION32  <comment="Size: 24(0x18)">;
+
+
+typedef struct {
+	UINT32 MaximumLength <comment="Offset: 0(0x00)">;
+	UINT32 Length <comment="Offset: 4(0x04)">;
+	UINT32 Flags <comment="Offset: 8(0x08)">;
+	UINT32 DebugFlags <comment="Offset: 12(0x0c)">;
+	HANDLE32 ConsoleHandle <comment="Offset: 16(0x10)">;
+	UINT32 ConsoleFlags <comment="Offset: 20(0x14)">;
+	HANDLE32 StandardInput <comment="Offset: 24(0x18)">;
+	HANDLE32 StandardOutput <comment="Offset: 28(0x1c)">;
+	HANDLE32 StandardError <comment="Offset: 32(0x20)">;
+	CURDIR32 CurrentDirectory <comment="Offset: 36(0x24)">;
+	UNICODE_STRING32 DllPath <comment="Offset: 48(0x30)">;
+	UNICODE_STRING32 ImagePathName <comment="Offset: 56(0x38)">;
+	UNICODE_STRING32 CommandLine <comment="Offset: 64(0x40)">;
+	P_X86 Environment <comment="Offset: 72(0x48)">;
+	UINT32 StartingX <comment="Offset: 76(0x4c)">;
+	UINT32 StartingY <comment="Offset: 80(0x50)">;
+	UINT32 CountX <comment="Offset: 84(0x54)">;
+	UINT32 CountY <comment="Offset: 88(0x58)">;
+	UINT32 CountCharsX <comment="Offset: 92(0x5c)">;
+	UINT32 CountCharsY <comment="Offset: 96(0x60)">;
+	UINT32 FillAttribute <comment="Offset: 100(0x64)">;
+	UINT32 WindowFlags <comment="Offset: 104(0x68)">;
+	UINT32 ShowWindowFlags <comment="Offset: 108(0x6c)">;
+	UNICODE_STRING32 WindowTitle <comment="Offset: 112(0x70)">;
+	UNICODE_STRING32 DesktopInfo <comment="Offset: 120(0x78)">;
+	UNICODE_STRING32 ShellInfo <comment="Offset: 128(0x80)">;
+	UNICODE_STRING32 RuntimeData <comment="Offset: 136(0x88)">;
+	byte _currentDirectories[512] <comment="Offset: 144(0x90)">;
+	P_X86 EnvironmentSize <comment="Offset: 656(0x290)">;
+	P_X86 EnvironmentVersion <comment="Offset: 660(0x294)">;
+	P_X86 PackageDependencyData <comment="Offset: 664(0x298)">;
+	UINT32 ProcessGroupId <comment="Offset: 668(0x29c)">;
+	UINT32 LoaderThreads <comment="Offset: 672(0x2a0)">;
+	UNICODE_STRING32 RedirectionDllName <comment="Offset: 676(0x2a4)">;
+	UNICODE_STRING32 HeapPartitionName <comment="Offset: 684(0x2ac)">;
+	P_X86 DefaultThreadpoolCpuSetMasks <comment="Offset: 692(0x2b4)">;
+	UINT32 DefaultThreadpoolCpuSetMaskCount <comment="Offset: 696(0x2b8)">;
+	UINT32 DefaultThreadpoolThreadMaximum <comment="Offset: 700(0x2bc)">;
+} RTL_USER_PROCESS_PARAMETERS32  <comment="Size: 704(0x2c0)">;
+
+
+typedef struct {
+	UINT32 Length <comment="Offset: 0(0x00)">;
+	BOOLEAN Initialized <comment="Offset: 4(0x04)">;
+	Pad(3);
+
+	P_X86 SsHandle <comment="Offset: 8(0x08)">;
+	LIST_ENTRY32 _InLoadOrderModuleList <comment="Offset: 12(0x0c)">;
+	LIST_ENTRY32 _InMemoryOrderModuleList <comment="Offset: 20(0x14)">;
+	if (STRUCT_MODE == STRUCT_Inline){
+		local P_C _cp11 = FTell();
+		if (GoToNextItemInListEntry("PEB_LDR_DATA32._InMemoryOrderModuleList(LDR_DATA_TABLE_ENTRY32)", ProcessLocalToHeapAddress(startof(_InMemoryOrderModuleList)), _InMemoryOrderModuleList._Flink, -8))
+			 LDR_DATA_TABLE_ENTRY32 __InMemoryOrderModuleList;
+		FSeek(_cp11);
+	}
+	LIST_ENTRY32 _InInitializationOrderModuleList <comment="Offset: 12(0x0c)">;
+	Pad(8);
+
+	P_X86 EntryInProgress <comment="Offset: 36(0x24)">;
+	BOOLEAN ShutdownInProgress <comment="Offset: 40(0x28)">;
+	Pad(3);
+
+	HANDLE32 ShutdownThreadId <comment="Offset: 44(0x2c)">;
+	if (STRUCT_MODE == STRUCT_AtEnd){
+		local P_C _cur_pos = FTell();
+			if (STRUCT_MODE == STRUCT_AtEnd){
+				local uint64 NextEntryPointer = _InMemoryOrderModuleList._Flink;
+			while(TRUE){
+				NextEntryPointer = GoToNextItemInListEntry("", ProcessLocalToHeapAddress(startof(_InMemoryOrderModuleList)), NextEntryPointer, -8); //"PEB_LDR_DATA32._InMemoryOrderModuleList(LDR_DATA_TABLE_ENTRY32)" don't have description so its silent
+				if (NextEntryPointer == -1)
+					break;
+				LDR_DATA_TABLE_ENTRY32 __InMemoryOrderModuleList;
+			}
+			}
+		
+		FSeek(_cur_pos);
+	}
+	if (STRUCT_MODE == STRUCT_External){
+		
+		externals[CUR_EXTERNAL_POS].desc = "PEB_LDR_DATA32._InMemoryOrderModuleList(LDR_DATA_TABLE_ENTRY32)";
+		externals[CUR_EXTERNAL_POS].type = "LDR_DATA_TABLE_ENTRY32";
+		externals[CUR_EXTERNAL_POS].comment = "_InMemoryOrderModuleList";
+		externals[CUR_EXTERNAL_POS].start = ProcessLocalToHeapAddress(startof(_InMemoryOrderModuleList));
+		externals[CUR_EXTERNAL_POS].offset=-8;
+		externals[CUR_EXTERNAL_POS].is_list_entry_grp=TRUE;
+		CUR_EXTERNAL_POS++;
+	}
+} PEB_LDR_DATA32  <comment="Size: 48(0x30)">;
+
+
+typedef struct {
+	P_X64 DebugInfo <comment="Offset: 0(0x00)">;
+	UINT32 LockCount <comment="Offset: 8(0x08)">;	if (STRUCT_MODE == STRUCT_Inline){
+		local P_C _cp10 = FTell();
+		if (CondPointerJump("RTL_CRITICAL_SECTION64.DebugInfo(RTL_CRITICAL_SECTION_DEBUG64)", DebugInfo, LockCount != -1))
+			 RTL_CRITICAL_SECTION_DEBUG64 _DebugInfo;
+		FSeek(_cp10);
+	}
+
+	UINT32 RecursionCount <comment="Offset: 12(0x0c)">;
+	HANDLE64 OwningThread <comment="Offset: 16(0x10)">;
+	HANDLE64 LockSemaphore <comment="Offset: 24(0x18)">;
+	UINT64 SpinCount <comment="Offset: 32(0x20)">;
+	if (STRUCT_MODE == STRUCT_AtEnd){
+		local P_C _cur_pos = FTell();
+		if (CondPointerJump("RTL_CRITICAL_SECTION64.DebugInfo(RTL_CRITICAL_SECTION_DEBUG64)", DebugInfo, LockCount != -1))
+			 RTL_CRITICAL_SECTION_DEBUG64 _DebugInfo;
+		
+		FSeek(_cur_pos);
+	}
+	if (STRUCT_MODE == STRUCT_External){
+		if (LockCount != -1){
+				
+		externals[CUR_EXTERNAL_POS].desc = "RTL_CRITICAL_SECTION64.DebugInfo(RTL_CRITICAL_SECTION_DEBUG64)";
+		externals[CUR_EXTERNAL_POS].type = "RTL_CRITICAL_SECTION_DEBUG64";
+		externals[CUR_EXTERNAL_POS].comment = "DebugInfo";
+		externals[CUR_EXTERNAL_POS].start = DebugInfo;
+		CUR_EXTERNAL_POS++;
+		}
+	}
+} RTL_CRITICAL_SECTION64  <comment="Size: 40(0x28)">;
+
+
+typedef struct {
+	UINT32 MaximumLength <comment="Offset: 0(0x00)">;
+	UINT32 Length <comment="Offset: 4(0x04)">;
+	UINT32 Flags <comment="Offset: 8(0x08)">;
+	UINT32 DebugFlags <comment="Offset: 12(0x0c)">;
+	HANDLE64 ConsoleHandle <comment="Offset: 16(0x10)">;
+	UINT32 ConsoleFlags <comment="Offset: 24(0x18)">;
+	Pad(4);
+
+	HANDLE64 StandardInput <comment="Offset: 32(0x20)">;
+	HANDLE64 StandardOutput <comment="Offset: 40(0x28)">;
+	HANDLE64 StandardError <comment="Offset: 48(0x30)">;
+	CURDIR64 CurrentDirectory <comment="Offset: 56(0x38)">;
+	UNICODE_STRING64 DllPath <comment="Offset: 80(0x50)">;
+	UNICODE_STRING64 ImagePathName <comment="Offset: 96(0x60)">;
+	UNICODE_STRING64 CommandLine <comment="Offset: 112(0x70)">;
+	P_X64 Environment <comment="Offset: 128(0x80)">;
+	UINT32 StartingX <comment="Offset: 136(0x88)">;
+	UINT32 StartingY <comment="Offset: 140(0x8c)">;
+	UINT32 CountX <comment="Offset: 144(0x90)">;
+	UINT32 CountY <comment="Offset: 148(0x94)">;
+	UINT32 CountCharsX <comment="Offset: 152(0x98)">;
+	UINT32 CountCharsY <comment="Offset: 156(0x9c)">;
+	UINT32 FillAttribute <comment="Offset: 160(0xa0)">;
+	UINT32 WindowFlags <comment="Offset: 164(0xa4)">;
+	UINT32 ShowWindowFlags <comment="Offset: 168(0xa8)">;
+	Pad(4);
+
+	UNICODE_STRING64 WindowTitle <comment="Offset: 176(0xb0)">;
+	UNICODE_STRING64 DesktopInfo <comment="Offset: 192(0xc0)">;
+	UNICODE_STRING64 ShellInfo <comment="Offset: 208(0xd0)">;
+	UNICODE_STRING64 RuntimeData <comment="Offset: 224(0xe0)">;
+	byte _currentDirectories[768] <comment="Offset: 240(0xf0)">;
+	P_X64 EnvironmentSize <comment="Offset: 1008(0x3f0)">;
+	P_X64 EnvironmentVersion <comment="Offset: 1016(0x3f8)">;
+	P_X64 PackageDependencyData <comment="Offset: 1024(0x400)">;
+	UINT32 ProcessGroupId <comment="Offset: 1032(0x408)">;
+	UINT32 LoaderThreads <comment="Offset: 1036(0x40c)">;
+	UNICODE_STRING64 RedirectionDllName <comment="Offset: 1040(0x410)">;
+	UNICODE_STRING64 HeapPartitionName <comment="Offset: 1056(0x420)">;
+	P_X64 DefaultThreadpoolCpuSetMasks <comment="Offset: 1072(0x430)">;
+	UINT32 DefaultThreadpoolCpuSetMaskCount <comment="Offset: 1080(0x438)">;
+	UINT32 DefaultThreadpoolThreadMaximum <comment="Offset: 1084(0x43c)">;
+} RTL_USER_PROCESS_PARAMETERS64  <comment="Size: 1088(0x440)">;
+
+
+typedef struct {
+	UINT32 Length <comment="Offset: 0(0x00)">;
+	BOOLEAN Initialized <comment="Offset: 4(0x04)">;
+	Pad(3);
+
+	P_X64 SsHandle <comment="Offset: 8(0x08)">;
+	LIST_ENTRY64 _InLoadOrderModuleList <comment="Offset: 16(0x10)">;
+	LIST_ENTRY64 _InMemoryOrderModuleList <comment="Offset: 32(0x20)">;
+	if (STRUCT_MODE == STRUCT_Inline){
+		local P_C _cp9 = FTell();
+		if (GoToNextItemInListEntry("PEB_LDR_DATA64._InMemoryOrderModuleList(LDR_DATA_TABLE_ENTRY64)", ProcessLocalToHeapAddress(startof(_InMemoryOrderModuleList)), _InMemoryOrderModuleList._Flink, -16))
+			 LDR_DATA_TABLE_ENTRY64 __InMemoryOrderModuleList;
+		FSeek(_cp9);
+	}
+	LIST_ENTRY64 _InInitializationOrderModuleList <comment="Offset: 48(0x30)">;
+	P_X64 EntryInProgress <comment="Offset: 64(0x40)">;
+	BOOLEAN ShutdownInProgress <comment="Offset: 72(0x48)">;
+	Pad(7);
+
+	HANDLE64 ShutdownThreadId <comment="Offset: 80(0x50)">;
+	if (STRUCT_MODE == STRUCT_AtEnd){
+		local P_C _cur_pos = FTell();
+			if (STRUCT_MODE == STRUCT_AtEnd){
+				local uint64 NextEntryPointer = _InMemoryOrderModuleList._Flink;
+			while(TRUE){
+				NextEntryPointer = GoToNextItemInListEntry("", ProcessLocalToHeapAddress(startof(_InMemoryOrderModuleList)), NextEntryPointer, -16); //"PEB_LDR_DATA64._InMemoryOrderModuleList(LDR_DATA_TABLE_ENTRY64)" don't have description so its silent
+				if (NextEntryPointer == -1)
+					break;
+				LDR_DATA_TABLE_ENTRY64 __InMemoryOrderModuleList;
+			}
+			}
+		
+		FSeek(_cur_pos);
+	}
+	if (STRUCT_MODE == STRUCT_External){
+		
+		externals[CUR_EXTERNAL_POS].desc = "PEB_LDR_DATA64._InMemoryOrderModuleList(LDR_DATA_TABLE_ENTRY64)";
+		externals[CUR_EXTERNAL_POS].type = "LDR_DATA_TABLE_ENTRY64";
+		externals[CUR_EXTERNAL_POS].comment = "_InMemoryOrderModuleList";
+		externals[CUR_EXTERNAL_POS].start = ProcessLocalToHeapAddress(startof(_InMemoryOrderModuleList));
+		externals[CUR_EXTERNAL_POS].offset=-16;
+		externals[CUR_EXTERNAL_POS].is_list_entry_grp=TRUE;
+		CUR_EXTERNAL_POS++;
+	}
+} PEB_LDR_DATA64  <comment="Size: 88(0x58)">;
+
+
+typedef struct {
+	BOOLEAN InheritedAddressSpace <comment="Offset: 0(0x00)">;
+	BOOLEAN ReadImageFileExecOptions <comment="Offset: 1(0x01)">;
+	BOOLEAN BeingDebugged <comment="Offset: 2(0x02)">;
+	PEB_BitField BitField <comment="Offset: 3(0x03)">;
+	HANDLE32 Mutant <comment="Offset: 4(0x04)">;
+	P_X86 ImageBaseAddress <comment="Offset: 8(0x08)">;
+	P_X86 Ldr <comment="Offset: 12(0x0c)">;
+	if (STRUCT_MODE == STRUCT_Inline){
+		local P_C _cp5 = FTell();
+		if (PointerJump("PEB32.Ldr(PEB_LDR_DATA32)", Ldr))
+			 PEB_LDR_DATA32 _Ldr;
+		FSeek(_cp5);
+	}
+	P_X86 ProcessParameters <comment="Offset: 16(0x10)">;
+	if (STRUCT_MODE == STRUCT_Inline){
+		local P_C _cp6 = FTell();
+		if (PointerJump("PEB32.ProcessParameters(RTL_USER_PROCESS_PARAMETERS32)", ProcessParameters))
+			 RTL_USER_PROCESS_PARAMETERS32 _ProcessParameters;
+		FSeek(_cp6);
+	}
+	P_X86 SubSystemData <comment="Offset: 20(0x14)">;
+	P_X86 ProcessHeap <comment="Offset: 24(0x18)">;
+	P_X86 FastPebLock <comment="Offset: 28(0x1c)">;
+	if (STRUCT_MODE == STRUCT_Inline){
+		local P_C _cp7 = FTell();
+		if (PointerJump("PEB32.FastPebLock(RTL_CRITICAL_SECTION32)", FastPebLock))
+			 RTL_CRITICAL_SECTION32 _FastPebLock;
+		FSeek(_cp7);
+	}
+	P_X86 AtlThunkSListPtr <comment="Offset: 32(0x20)">;
+	P_X86 IFEOKey <comment="Offset: 36(0x24)">;
+	PEB_CrossProcess CrossProcessFlags <comment="Offset: 40(0x28)">;
+	P_X86 UserSharedInfoPtr <comment="Offset: 44(0x2c)">;
+	Pad(4);
+
+	P_X86 AtlThunkSListPtr32 <comment="Offset: 52(0x34)">;
+	P_X86 ApiSetMap <comment="Offset: 56(0x38)">;
+	UINT32 TlsExpansionCounter <comment="Offset: 60(0x3c)">;
+	P_X86 TlsBitmap <comment="Offset: 64(0x40)">;
+	UINT32 TlsBitmapBits[2] <comment="Offset: 68(0x44)">;
+	P_X86 ReadOnlySharedMemoryBase <comment="Offset: 76(0x4c)">;
+	P_X86 SharedData <comment="Offset: 80(0x50)">;
+	P_X86 ReadOnlyStaticServerData <comment="Offset: 84(0x54)">;
+	P_X86 AnsiCodePageData <comment="Offset: 88(0x58)">;
+	P_X86 OemCodePageData <comment="Offset: 92(0x5c)">;
+	P_X86 UnicodeCaseTableData <comment="Offset: 96(0x60)">;
+	UINT32 NumberOfProcessors <comment="Offset: 100(0x64)">;
+	UINT32 NtGlobalFlag <comment="Offset: 104(0x68)">;
+	Pad(4);
+
+	LARGE_INTEGER CriticalSectionTimeout <comment="Offset: 112(0x70)">;
+	P_X86 HeapSegmentReserve <comment="Offset: 120(0x78)">;
+	P_X86 HeapSegmentCommit <comment="Offset: 124(0x7c)">;
+	P_X86 HeapDeCommitTotalFreeThreshold <comment="Offset: 128(0x80)">;
+	P_X86 HeapDeCommitFreeBlockThreshold <comment="Offset: 132(0x84)">;
+	UINT32 NumberOfHeaps <comment="Offset: 136(0x88)">;
+	UINT32 MaximumNumberOfHeaps <comment="Offset: 140(0x8c)">;
+	P_X86 ProcessHeaps <comment="Offset: 144(0x90)">;
+	P_X86 GdiSharedHandleTable <comment="Offset: 148(0x94)">;
+	P_X86 ProcessTarterHelper <comment="Offset: 152(0x98)">;
+	UINT32 GdiDCAttributeList <comment="Offset: 156(0x9c)">;
+	P_X86 LoaderLock <comment="Offset: 160(0xa0)">;
+	if (STRUCT_MODE == STRUCT_Inline){
+		local P_C _cp8 = FTell();
+		if (PointerJump("PEB32.LoaderLock(RTL_CRITICAL_SECTION32)", LoaderLock))
+			 RTL_CRITICAL_SECTION32 _LoaderLock;
+		FSeek(_cp8);
+	}
+	UINT32 OSMajorVersion <comment="Offset: 164(0xa4)">;
+	UINT32 OSMinorVersion <comment="Offset: 168(0xa8)">;
+	uint16 OSBuildNumber <comment="Offset: 172(0xac)">;
+	uint16 OSCSDVersion <comment="Offset: 174(0xae)">;
+	UINT32 OSPlatformId <comment="Offset: 176(0xb0)">;
+	UINT32 ImageSubsystem <comment="Offset: 180(0xb4)">;
+	UINT32 ImageSubsystemMajorVersion <comment="Offset: 184(0xb8)">;
+	UINT32 ImageSubsystemMinorVersion <comment="Offset: 188(0xbc)">;
+	KAFFINITY32 ActiveProcessAffinityMask <comment="Offset: 192(0xc0)">;
+	UINT32 GdiHandleBuffer[34] <comment="Offset: 196(0xc4)">;
+	P_X86 PostProcessInitRoutine <comment="Offset: 332(0x14c)">;
+	P_X86 TlsExpansionBitmap <comment="Offset: 336(0x150)">;
+	UINT32 TlsExpansionBitmapBits[32] <comment="Offset: 340(0x154)">;
+	UINT32 SessionId <comment="Offset: 468(0x1d4)">;
+	PEB_AppCompat AppCompatFlags <comment="Offset: 472(0x1d8)">;
+	PEB_AppCompat AppCompatFlagsUser <comment="Offset: 480(0x1e0)">;
+	P_X86 pShimData <comment="Offset: 488(0x1e8)">;
+	P_X86 AppCompatInfo <comment="Offset: 492(0x1ec)">;
+	UNICODE_STRING32 CSDVersion <comment="Offset: 496(0x1f0)">;
+	P_X86 ActivationContextData <comment="Offset: 504(0x1f8)">;
+	P_X86 ProcessAssemblyStorageMap <comment="Offset: 508(0x1fc)">;
+	P_X86 SystemDefaultActivationContextData <comment="Offset: 512(0x200)">;
+	P_X86 SystemAssemblyStorageMap <comment="Offset: 516(0x204)">;
+	P_X86 MinimumStackCommit <comment="Offset: 520(0x208)">;
+	P_X86 FlsCallback <comment="Offset: 524(0x20c)">;
+	LIST_ENTRY32 FlatListHead <comment="Offset: 528(0x210)">;
+	P_X86 FlsBitmap <comment="Offset: 536(0x218)">;
+	UINT32 FlsBitmapBits[4] <comment="Offset: 540(0x21c)">;
+	UINT32 FlsHighIndex <comment="Offset: 556(0x22c)">;
+	P_X86 WerRegistrationData <comment="Offset: 560(0x230)">;
+	P_X86 WerShipAssertPtr <comment="Offset: 564(0x234)">;
+	P_X86 pContextData <comment="Offset: 568(0x238)">;
+	P_X86 pImageHeaderHash <comment="Offset: 572(0x23c)">;
+	PEB_Tracing TracingFlags <comment="Offset: 576(0x240)">;
+	Pad(4);
+
+	UINT64 CsrServerReadOnlySharedMemoryBase <comment="Offset: 584(0x248)">;
+	UINT32 TppWorkerpListLock <comment="Offset: 592(0x250)">;
+	LIST_ENTRY32 TppWorkerList <comment="Offset: 596(0x254)">;
+	UINT32 WaitOnAddressHashTable[128] <comment="Offset: 604(0x25c)">;
+	P_X86 TelemetryCoverageHeader <comment="Offset: 1116(0x45c)">;
+	UINT32 CloudFileFlags <comment="Offset: 1120(0x460)">;
+	UINT32 CloudFileDiagFlags <comment="Offset: 1124(0x464)">;
+	byte PlaceholderCompatibilityMode <comment="Offset: 1128(0x468)">;
+	Pad(7);
+
+	P_X86 LeapSecondData <comment="Offset: 1136(0x470)">;
+	PEB_LeapSecond LeapSecondFlags <comment="Offset: 1140(0x474)">;
+	UINT32 NtGlobalFlag2 <comment="Offset: 1144(0x478)">;
+	if (STRUCT_MODE == STRUCT_AtEnd){
+		local P_C _cur_pos = FTell();
+		if (PointerJump("PEB32.Ldr(PEB_LDR_DATA32)", Ldr))
+			 PEB_LDR_DATA32 _Ldr;
+		
+		if (PointerJump("PEB32.ProcessParameters(RTL_USER_PROCESS_PARAMETERS32)", ProcessParameters))
+			 RTL_USER_PROCESS_PARAMETERS32 _ProcessParameters;
+		
+		if (PointerJump("PEB32.FastPebLock(RTL_CRITICAL_SECTION32)", FastPebLock))
+			 RTL_CRITICAL_SECTION32 _FastPebLock;
+		
+		if (PointerJump("PEB32.LoaderLock(RTL_CRITICAL_SECTION32)", LoaderLock))
+			 RTL_CRITICAL_SECTION32 _LoaderLock;
+		
+		FSeek(_cur_pos);
+	}
+	if (STRUCT_MODE == STRUCT_External){
+		
+		externals[CUR_EXTERNAL_POS].desc = "PEB32.Ldr(PEB_LDR_DATA32)";
+		externals[CUR_EXTERNAL_POS].type = "PEB_LDR_DATA32";
+		externals[CUR_EXTERNAL_POS].comment = "Ldr";
+		externals[CUR_EXTERNAL_POS].start = Ldr;
+		CUR_EXTERNAL_POS++;
+		
+		externals[CUR_EXTERNAL_POS].desc = "PEB32.ProcessParameters(RTL_USER_PROCESS_PARAMETERS32)";
+		externals[CUR_EXTERNAL_POS].type = "RTL_USER_PROCESS_PARAMETERS32";
+		externals[CUR_EXTERNAL_POS].comment = "ProcessParameters";
+		externals[CUR_EXTERNAL_POS].start = ProcessParameters;
+		CUR_EXTERNAL_POS++;
+		
+		externals[CUR_EXTERNAL_POS].desc = "PEB32.FastPebLock(RTL_CRITICAL_SECTION32)";
+		externals[CUR_EXTERNAL_POS].type = "RTL_CRITICAL_SECTION32";
+		externals[CUR_EXTERNAL_POS].comment = "FastPebLock";
+		externals[CUR_EXTERNAL_POS].start = FastPebLock;
+		CUR_EXTERNAL_POS++;
+		
+		externals[CUR_EXTERNAL_POS].desc = "PEB32.LoaderLock(RTL_CRITICAL_SECTION32)";
+		externals[CUR_EXTERNAL_POS].type = "RTL_CRITICAL_SECTION32";
+		externals[CUR_EXTERNAL_POS].comment = "LoaderLock";
+		externals[CUR_EXTERNAL_POS].start = LoaderLock;
+		CUR_EXTERNAL_POS++;
+	}
+} PEB32  <comment="Size: 1152(0x480)">;
+
+
+typedef struct {
+	BOOLEAN InheritedAddressSpace <comment="Offset: 0(0x00)">;
+	BOOLEAN ReadImageFileExecOptions <comment="Offset: 1(0x01)">;
+	BOOLEAN BeingDebugged <comment="Offset: 2(0x02)">;
+	PEB_BitField BitField <comment="Offset: 3(0x03)">;
+	Pad(4);
+
+	HANDLE64 Mutant <comment="Offset: 8(0x08)">;
+	P_X64 ImageBaseAddress <comment="Offset: 16(0x10)">;
+	P_X64 Ldr <comment="Offset: 24(0x18)">;
+	if (STRUCT_MODE == STRUCT_Inline){
+		local P_C _cp1 = FTell();
+		if (PointerJump("PEB64.Ldr(PEB_LDR_DATA64)", Ldr))
+			 PEB_LDR_DATA64 _Ldr;
+		FSeek(_cp1);
+	}
+	P_X64 ProcessParameters <comment="Offset: 32(0x20)">;
+	if (STRUCT_MODE == STRUCT_Inline){
+		local P_C _cp2 = FTell();
+		if (PointerJump("PEB64.ProcessParameters(RTL_USER_PROCESS_PARAMETERS64)", ProcessParameters))
+			 RTL_USER_PROCESS_PARAMETERS64 _ProcessParameters;
+		FSeek(_cp2);
+	}
+	P_X64 SubSystemData <comment="Offset: 40(0x28)">;
+	P_X64 ProcessHeap <comment="Offset: 48(0x30)">;
+	P_X64 FastPebLock <comment="Offset: 56(0x38)">;
+	if (STRUCT_MODE == STRUCT_Inline){
+		local P_C _cp3 = FTell();
+		if (PointerJump("PEB64.FastPebLock(RTL_CRITICAL_SECTION64)", FastPebLock))
+			 RTL_CRITICAL_SECTION64 _FastPebLock;
+		FSeek(_cp3);
+	}
+	P_X64 AtlThunkSListPtr <comment="Offset: 64(0x40)">;
+	P_X64 IFEOKey <comment="Offset: 72(0x48)">;
+	PEB_CrossProcess CrossProcessFlags <comment="Offset: 80(0x50)">;
+	Pad(4);
+
+	P_X64 UserSharedInfoPtr <comment="Offset: 88(0x58)">;
+	Pad(4);
+
+	UINT32 AtlThunkSListPtr32 <comment="Offset: 100(0x64)">;
+	P_X64 ApiSetMap <comment="Offset: 104(0x68)">;
+	UINT32 TlsExpansionCounter <comment="Offset: 112(0x70)">;
+	Pad(4);
+
+	P_X64 TlsBitmap <comment="Offset: 120(0x78)">;
+	UINT32 TlsBitmapBits[2] <comment="Offset: 128(0x80)">;
+	P_X64 ReadOnlySharedMemoryBase <comment="Offset: 136(0x88)">;
+	P_X64 SharedData <comment="Offset: 144(0x90)">;
+	P_X64 ReadOnlyStaticServerData <comment="Offset: 152(0x98)">;
+	P_X64 AnsiCodePageData <comment="Offset: 160(0xa0)">;
+	P_X64 OemCodePageData <comment="Offset: 168(0xa8)">;
+	P_X64 UnicodeCaseTableData <comment="Offset: 176(0xb0)">;
+	UINT32 NumberOfProcessors <comment="Offset: 184(0xb8)">;
+	UINT32 NtGlobalFlag <comment="Offset: 188(0xbc)">;
+	LARGE_INTEGER CriticalSectionTimeout <comment="Offset: 192(0xc0)">;
+	P_X64 HeapSegmentReserve <comment="Offset: 200(0xc8)">;
+	P_X64 HeapSegmentCommit <comment="Offset: 208(0xd0)">;
+	P_X64 HeapDeCommitTotalFreeThreshold <comment="Offset: 216(0xd8)">;
+	P_X64 HeapDeCommitFreeBlockThreshold <comment="Offset: 224(0xe0)">;
+	UINT32 NumberOfHeaps <comment="Offset: 232(0xe8)">;
+	UINT32 MaximumNumberOfHeaps <comment="Offset: 236(0xec)">;
+	P_X64 ProcessHeaps <comment="Offset: 240(0xf0)">;
+	P_X64 GdiSharedHandleTable <comment="Offset: 248(0xf8)">;
+	P_X64 ProcessTarterHelper <comment="Offset: 256(0x100)">;
+	UINT32 GdiDCAttributeList <comment="Offset: 264(0x108)">;
+	Pad(4);
+
+	P_X64 LoaderLock <comment="Offset: 272(0x110)">;
+	if (STRUCT_MODE == STRUCT_Inline){
+		local P_C _cp4 = FTell();
+		if (PointerJump("PEB64.LoaderLock(RTL_CRITICAL_SECTION64)", LoaderLock))
+			 RTL_CRITICAL_SECTION64 _LoaderLock;
+		FSeek(_cp4);
+	}
+	UINT32 OSMajorVersion <comment="Offset: 280(0x118)">;
+	UINT32 OSMinorVersion <comment="Offset: 284(0x11c)">;
+	uint16 OSBuildNumber <comment="Offset: 288(0x120)">;
+	uint16 OSCSDVersion <comment="Offset: 290(0x122)">;
+	UINT32 OSPlatformId <comment="Offset: 292(0x124)">;
+	UINT32 ImageSubsystem <comment="Offset: 296(0x128)">;
+	UINT32 ImageSubsystemMajorVersion <comment="Offset: 300(0x12c)">;
+	UINT32 ImageSubsystemMinorVersion <comment="Offset: 304(0x130)">;
+	Pad(4);
+
+	KAFFINITY64 ActiveProcessAffinityMask <comment="Offset: 312(0x138)">;
+	UINT32 GdiHandleBuffer[60] <comment="Offset: 320(0x140)">;
+	P_X64 PostProcessInitRoutine <comment="Offset: 560(0x230)">;
+	P_X64 TlsExpansionBitmap <comment="Offset: 568(0x238)">;
+	UINT32 TlsExpansionBitmapBits[32] <comment="Offset: 576(0x240)">;
+	UINT32 SessionId <comment="Offset: 704(0x2c0)">;
+	Pad(4);
+
+	PEB_AppCompat AppCompatFlags <comment="Offset: 712(0x2c8)">;
+	PEB_AppCompat AppCompatFlagsUser <comment="Offset: 720(0x2d0)">;
+	P_X64 pShimData <comment="Offset: 728(0x2d8)">;
+	P_X64 AppCompatInfo <comment="Offset: 736(0x2e0)">;
+	UNICODE_STRING64 CSDVersion <comment="Offset: 744(0x2e8)">;
+	P_X64 ActivationContextData <comment="Offset: 760(0x2f8)">;
+	P_X64 ProcessAssemblyStorageMap <comment="Offset: 768(0x300)">;
+	P_X64 SystemDefaultActivationContextData <comment="Offset: 776(0x308)">;
+	P_X64 SystemAssemblyStorageMap <comment="Offset: 784(0x310)">;
+	P_X64 MinimumStackCommit <comment="Offset: 792(0x318)">;
+	P_X64 FlsCallback <comment="Offset: 800(0x320)">;
+	LIST_ENTRY64 FlatListHead <comment="Offset: 808(0x328)">;
+	P_X64 FlsBitmap <comment="Offset: 824(0x338)">;
+	UINT32 FlsBitmapBits[4] <comment="Offset: 832(0x340)">;
+	UINT32 FlsHighIndex <comment="Offset: 848(0x350)">;
+	Pad(4);
+
+	P_X64 WerRegistrationData <comment="Offset: 856(0x358)">;
+	P_X64 WerShipAssertPtr <comment="Offset: 864(0x360)">;
+	P_X64 pContextData <comment="Offset: 872(0x368)">;
+	P_X64 pImageHeaderHash <comment="Offset: 880(0x370)">;
+	PEB_Tracing TracingFlags <comment="Offset: 888(0x378)">;
+	Pad(4);
+
+	UINT64 CsrServerReadOnlySharedMemoryBase <comment="Offset: 896(0x380)">;
+	UINT32 TppWorkerpListLock <comment="Offset: 904(0x388)">;
+	Pad(4);
+
+	LIST_ENTRY64 TppWorkerpList <comment="Offset: 912(0x390)">;
+	UINT64 WaitOnAddressHashTable[128] <comment="Offset: 928(0x3a0)">;
+	P_X64 TelemetryCoverageHeader <comment="Offset: 1952(0x7a0)">;
+	UINT32 CloudFileFlags <comment="Offset: 1960(0x7a8)">;
+	UINT32 CloudFileDiagFlags <comment="Offset: 1964(0x7ac)">;
+	byte PlaceholderCompatibilityMode <comment="Offset: 1968(0x7b0)">;
+	Pad(7);
+
+	P_X64 LeapSecondData <comment="Offset: 1976(0x7b8)">;
+	PEB_LeapSecond LeapSecondFlags <comment="Offset: 1984(0x7c0)">;
+	UINT32 NtGlobalFlag2 <comment="Offset: 1988(0x7c4)">;
+	if (STRUCT_MODE == STRUCT_AtEnd){
+		local P_C _cur_pos = FTell();
+		if (PointerJump("PEB64.Ldr(PEB_LDR_DATA64)", Ldr))
+			 PEB_LDR_DATA64 _Ldr;
+		
+		if (PointerJump("PEB64.ProcessParameters(RTL_USER_PROCESS_PARAMETERS64)", ProcessParameters))
+			 RTL_USER_PROCESS_PARAMETERS64 _ProcessParameters;
+		
+		if (PointerJump("PEB64.FastPebLock(RTL_CRITICAL_SECTION64)", FastPebLock))
+			 RTL_CRITICAL_SECTION64 _FastPebLock;
+		
+		if (PointerJump("PEB64.LoaderLock(RTL_CRITICAL_SECTION64)", LoaderLock))
+			 RTL_CRITICAL_SECTION64 _LoaderLock;
+		
+		FSeek(_cur_pos);
+	}
+	if (STRUCT_MODE == STRUCT_External){
+		
+		externals[CUR_EXTERNAL_POS].desc = "PEB64.Ldr(PEB_LDR_DATA64)";
+		externals[CUR_EXTERNAL_POS].type = "PEB_LDR_DATA64";
+		externals[CUR_EXTERNAL_POS].comment = "Ldr";
+		externals[CUR_EXTERNAL_POS].start = Ldr;
+		CUR_EXTERNAL_POS++;
+		
+		externals[CUR_EXTERNAL_POS].desc = "PEB64.ProcessParameters(RTL_USER_PROCESS_PARAMETERS64)";
+		externals[CUR_EXTERNAL_POS].type = "RTL_USER_PROCESS_PARAMETERS64";
+		externals[CUR_EXTERNAL_POS].comment = "ProcessParameters";
+		externals[CUR_EXTERNAL_POS].start = ProcessParameters;
+		CUR_EXTERNAL_POS++;
+		
+		externals[CUR_EXTERNAL_POS].desc = "PEB64.FastPebLock(RTL_CRITICAL_SECTION64)";
+		externals[CUR_EXTERNAL_POS].type = "RTL_CRITICAL_SECTION64";
+		externals[CUR_EXTERNAL_POS].comment = "FastPebLock";
+		externals[CUR_EXTERNAL_POS].start = FastPebLock;
+		CUR_EXTERNAL_POS++;
+		
+		externals[CUR_EXTERNAL_POS].desc = "PEB64.LoaderLock(RTL_CRITICAL_SECTION64)";
+		externals[CUR_EXTERNAL_POS].type = "RTL_CRITICAL_SECTION64";
+		externals[CUR_EXTERNAL_POS].comment = "LoaderLock";
+		externals[CUR_EXTERNAL_POS].start = LoaderLock;
+		CUR_EXTERNAL_POS++;
+	}
+} PEB64  <comment="Size: 1992(0x7c8)">;
+
+
+typedef struct {
+	NTSTATUS ExitStatus <comment="Offset: 0(0x00)">;
+	P_X86 PebBaseAddress <comment="Offset: 4(0x04)">;
+	if (STRUCT_MODE == STRUCT_Inline){
+		local P_C _cp0 = FTell();
+		if (PointerJump("PROCESS_BASIC_INFORMATION32.PebBaseAddress(PEB32)", PebBaseAddress))
+			 PEB32 _PebBaseAddress;
+		FSeek(_cp0);
+	}
+	KAFFINITY32 AffinityMask <comment="Offset: 8(0x08)">;
+	KPRIORITY BasePriority <comment="Offset: 12(0x0c)">;
+	UINT32 UniqueProcessId <comment="Offset: 16(0x10)">;
+	UINT32 InheritedFromUniqueProcessId <comment="Offset: 20(0x14)">;
+	if (STRUCT_MODE == STRUCT_AtEnd){
+		local P_C _cur_pos = FTell();
+		if (PointerJump("PROCESS_BASIC_INFORMATION32.PebBaseAddress(PEB32)", PebBaseAddress))
+			 PEB32 _PebBaseAddress;
+		
+		FSeek(_cur_pos);
+	}
+	if (STRUCT_MODE == STRUCT_External){
+		
+		externals[CUR_EXTERNAL_POS].desc = "PROCESS_BASIC_INFORMATION32.PebBaseAddress(PEB32)";
+		externals[CUR_EXTERNAL_POS].type = "PEB32";
+		externals[CUR_EXTERNAL_POS].comment = "PebBaseAddress";
+		externals[CUR_EXTERNAL_POS].start = PebBaseAddress;
+		CUR_EXTERNAL_POS++;
+	}
+} PROCESS_BASIC_INFORMATION32  <comment="Size: 24(0x18)">;
+
+
+typedef struct {
+	NTSTATUS ExitStatus <comment="Offset: 0(0x00)">;
+	Pad(4);
+
+	P_X64 PebBaseAddress <comment="Offset: 8(0x08)">;
+	KAFFINITY64 AffinityMask <comment="Offset: 16(0x10)">;
+	KPRIORITY BasePriority <comment="Offset: 24(0x18)">;
+	Pad(4);
+
+	UINT64 UniqueProcessId <comment="Offset: 32(0x20)">;
+	UINT64 InheritedFromUniqueProcessId <comment="Offset: 40(0x28)">;
+} PROCESS_BASIC_INFORMATION64  <comment="Size: 48(0x30)">;
+
+if (STRUCT_MODE == STRUCT_AtEnd){
+	local P_C _cur_pos = FTell();
+	FSeek(_cur_pos);
+}
+
+
+
+local P_C peb = FindPEB();
+if (PointerJump("PROCESS_BASIC_INFORMATION.PebBaseAddress(PEB)",peb)){
+	if (proc_bitness == BITNESS_x64){
+		PEB64 _PebBaseAddress64;
+}
+	else {
+		PEB32 _PebBaseAddress32;
+}
+}
+
+if (STRUCT_MODE == STRUCT_External){
+	local P_C _cur_pos = FTell();
+	local int x;
+	local uint64 NextEntryPointer;//only used for list items
+	for (x = 0; x < CUR_EXTERNAL_POS;x++){
+		if (externals[x].is_list_entry_grp) {
+			if (! PointerJump("Initial list entry fetch",externals[x].start))
+				continue;
+			NextEntryPointer  = ReadUInt_C(FTell());
+		} //list_entry
+		while(TRUE){ //item true loop
+			if (externals[x].is_list_entry_grp){
+				
+				NextEntryPointer = GoToNextItemInListEntry(externals[x].desc, externals[x].start, NextEntryPointer, externals[x].offset);
+				if (NextEntryPointer == -1)
+					break;
+				
+			} else if (! PointerJump(externals[x].desc,externals[x].start)) //IsListEntryGroup
+				break;
+			switch (externals[x].type) {
+				case "PEB32":
+					PEB32 _PEB32 <comment=(externals[x].comment)>;break;
+				case "PEB_LDR_DATA64":
+					PEB_LDR_DATA64 _PEB_LDR_DATA64 <comment=(externals[x].comment)>;break;
+				case "RTL_USER_PROCESS_PARAMETERS64":
+					RTL_USER_PROCESS_PARAMETERS64 _RTL_USER_PROCESS_PARAMETERS64 <comment=(externals[x].comment)>;break;
+				case "RTL_CRITICAL_SECTION64":
+					RTL_CRITICAL_SECTION64 _RTL_CRITICAL_SECTION64 <comment=(externals[x].comment)>;break;
+				case "PEB_LDR_DATA32":
+					PEB_LDR_DATA32 _PEB_LDR_DATA32 <comment=(externals[x].comment)>;break;
+				case "RTL_USER_PROCESS_PARAMETERS32":
+					RTL_USER_PROCESS_PARAMETERS32 _RTL_USER_PROCESS_PARAMETERS32 <comment=(externals[x].comment)>;break;
+				case "RTL_CRITICAL_SECTION32":
+					RTL_CRITICAL_SECTION32 _RTL_CRITICAL_SECTION32 <comment=(externals[x].comment)>;break;
+				case "LDR_DATA_TABLE_ENTRY64":
+					LDR_DATA_TABLE_ENTRY64 _LDR_DATA_TABLE_ENTRY64 <comment=(externals[x].comment)>;break;
+				case "RTL_CRITICAL_SECTION_DEBUG64":
+					RTL_CRITICAL_SECTION_DEBUG64 _RTL_CRITICAL_SECTION_DEBUG64 <comment=(externals[x].comment)>;break;
+				case "LDR_DATA_TABLE_ENTRY32":
+					LDR_DATA_TABLE_ENTRY32 _LDR_DATA_TABLE_ENTRY32 <comment=(externals[x].comment)>;break;
+				case "RTL_CRITICAL_SECTION_DEBUG32":
+					RTL_CRITICAL_SECTION_DEBUG32 _RTL_CRITICAL_SECTION_DEBUG32 <comment=(externals[x].comment)>;break;
+			} //switch end
+			if (! externals[x].is_list_entry_grp)
+				break;
+		} //while end
+	} //for external loop
+} //is external
+
+
+Printf("Done success for type: Windows.Win32.System.Threading.PROCESS_BASIC_INFORMATION64\n");
+
